@@ -1,11 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import * as htmlToImage from "html-to-image";
 import jsPDF from "jspdf";
 import footerBg from "/hyperstack.png";
 import walletBtn from "/button.png";
 import certificateMock from "/mockup.jpg";
 import logo from "/logo.jpeg";
-
+import QRCode from "qrcode";
 import facebookIcon from "/social_facebook.png";
 import xIcon from "/social_x.png";
 import waIcon from "/social_whatsapp.png";
@@ -27,6 +27,27 @@ export default function MobileApp() {
     const [showTooltip, setShowTooltip] = useState(false);
     const [copied, setCopied] = useState(false);
     const certRef = useRef(null);
+    const [qrImage, setQrImage] = useState("");
+
+    const generateQR = async () => {
+        try {
+            const qr = await QRCode.toDataURL("https://corizo-iota.vercel.app/", {
+                width: 600,          // We scale down later to 87px
+                margin: 0,
+                errorCorrectionLevel: "M",  // Larger cells than H
+                version: 5,          // Lower version makes bigger squares
+                scale: 6            // Controls black cell thickness
+            });
+
+            setQrImage(qr);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+        generateQR()
+    }, [])
 
     const openShareWindow = (url) => {
         const width = 600;
@@ -98,8 +119,16 @@ export default function MobileApp() {
 
         pdf.text(wrappedText, 148.5, 119, { align: "center" });
 
+        pdf.addImage(qrImage, "PNG", 162, 152, 32, 32); // SIZE + POSITION FIXED
+
+        // ID text
+        pdf.setFontSize(10);
+        pdf.setTextColor(20, 20, 20);
+        pdf.text("Corizo Dice ID - CRZ121932", 177, 190, { align: "center" });
+
         pdf.save("Bhanu_Pratap_Singh_Training_Certificate_Corizo_Certificate.pdf");
     };
+
 
 
     return (
@@ -149,9 +178,20 @@ export default function MobileApp() {
                             </div>
 
                             {/* Body text: block above signature area */}
-                            <div className="mt-3 w-[55%] text-[5px] md:text-[10px] leading-1.5 text-black">
+                            <div className="mt-3 w-[56%] text-[5px] md:text-[10px] leading-1.5 text-black">
                                 <p>{CERTIFICATE_BODY}</p>
                             </div>
+                        </div>
+                        <div className="absolute bottom-4 right-[95px] flex flex-col items-center">
+                            <img
+                                src={qrImage}
+                                alt="QR"
+                                style={{ width: "38px", height: "38px" }}
+                                className="block"
+                            />
+                            <p className="text-[5px] tracking-wide text-[#1f1e1e] mt-1">
+                                Corizo Dice ID - CRZ121932
+                            </p>
                         </div>
                     </div>
                 </div>
