@@ -27,16 +27,19 @@ export default function MobileApp() {
     const [showTooltip, setShowTooltip] = useState(false);
     const [copied, setCopied] = useState(false);
     const certRef = useRef(null);
-    const [recipientName, setRecipientName] = useState("Harsh Singh");
+    const [recipientName, setRecipientName] = useState("Akshay Verma");
+    const [recipientCode, setRecipientCode] = useState("");
     const [qrImage, setQrImage] = useState("");
 
-    const generateQR = async (name) => {
+    const generateQR = async (name, code) => {
         try {
-            const encodedName = encodeURIComponent(name || "Harsh Singh");
-            const urlWithName = `https://corizo.in.net/?name=${encodedName}`;
+            const encodedName = encodeURIComponent(name);
+            const encodedCode = encodeURIComponent(code);
+
+            const urlWithName = `https://corizo.in.net/?name=${encodedName}&code=${encodedCode}`;
 
             const qr = await QRCode.toDataURL(urlWithName, {
-                width: 600,              // We scale down later to 87px
+                width: 600,
                 margin: 0,
                 errorCorrectionLevel: "M",
                 version: 5,
@@ -52,15 +55,25 @@ export default function MobileApp() {
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
+
         const nameFromUrl = params.get("name");
+        const codeFromUrl = params.get("code");
 
         const finalName = nameFromUrl
             ? decodeURIComponent(nameFromUrl)
-            : "Bhanu Pratap Singh";
+            : "Akshay Verma";
 
-        setRecipientName(finalName);
-        generateQR(finalName);
+        const finalCode = codeFromUrl
+            ? decodeURIComponent(codeFromUrl)
+            : "CRZ121938";
+
+        setRecipientName(finalName);   // ✅ dynamic name
+        setRecipientCode(finalCode);   // ✅ dynamic code
+
+        generateQR(finalName, finalCode); // IMPORTANT
     }, []);
+
+
 
 
     const openShareWindow = (url) => {
@@ -139,7 +152,7 @@ export default function MobileApp() {
         // ID text
         pdf.setFontSize(10);
         pdf.setTextColor(20, 20, 20);
-        pdf.text("Corizo Dice ID - CRZ121932", 177, 190, { align: "center" });
+        pdf.text(`Corizo Dice ID - ${recipientCode}`, 177, 190, { align: "center" });
 
         pdf.save(`${recipientName.split(" ").join("_")}_Training_Certificate_Corizo_Certificate.pdf`);
     };
@@ -206,7 +219,7 @@ export default function MobileApp() {
                                 className="block"
                             />
                             <p className="text-[5px] tracking-wide text-[#1f1e1e] mt-1">
-                                Corizo Dice ID - CRZ121932
+                                Corizo Dice ID - {recipientCode}
                             </p>
                         </div>
                     </div>
