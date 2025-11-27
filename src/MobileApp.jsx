@@ -27,8 +27,8 @@ export default function MobileApp() {
     const [showTooltip, setShowTooltip] = useState(false);
     const [copied, setCopied] = useState(false);
     const certRef = useRef(null);
-    const [recipientName, setRecipientName] = useState("Harsh Singh");
-    const [recipientCode, setRecipientCode] = useState("CRZ121932");
+    const [recipientName, setRecipientName] = useState("Bhanu Pratap Singh");
+    const [recipientCode, setRecipientCode] = useState("CRZ121934");
     const [qrImage, setQrImage] = useState("");
 
     const encodeData = (name, code) => {
@@ -40,7 +40,7 @@ export default function MobileApp() {
         try {
             return JSON.parse(atob(hash));
         } catch (err) {
-            return { name: "Harsh Singh", code: "CRZ121932" };
+            return { name: "Bhanu Pratap Singh", code: "CRZ121934" };
         }
     };
 
@@ -77,8 +77,8 @@ export default function MobileApp() {
             generateQR(name, code); // regenerate QR with new hash
         } else {
             // default values
-            const defaultName = "Harsh Singh";
-            const defaultCode = "CRZ121932";
+            const defaultName = "Bhanu Pratap Singh";
+            const defaultCode = "CRZ121934";
             setRecipientName(defaultName);
             setRecipientCode(defaultCode);
             generateQR(defaultName, defaultCode);
