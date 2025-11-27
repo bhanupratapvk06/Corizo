@@ -31,23 +31,16 @@ export default function MobileApp() {
     const [recipientCode, setRecipientCode] = useState("");
     const [qrImage, setQrImage] = useState("");
 
-    const generateHash = async (name, code) => {
-        const text = `${name}|${code}`;  // combine both
-        const encoder = new TextEncoder();
-        const data = encoder.encode(text);
-        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        return hashHex;
-    };
-
-
     const generateQR = async (name, code) => {
         try {
-            const hash = await generateHash(name, code); // NEW
-            const urlWithHash = `https://corizo.in.net/?id=${hash}`; // 🔹 hash in URL
+            const encodedName = encodeURIComponent(name || "Akshay Verma");
+            const encodedDice = encodeURIComponent(code || "CRZ121938");
 
-            const qr = await QRCode.toDataURL(urlWithHash, {
+            const urlWithName = `https://corizo.in.net/?name=${encodedName}&code=${encodedDice}`;
+
+            console.log("QR URL:", urlWithName);
+
+            const qr = await QRCode.toDataURL(urlWithName, {
                 width: 600,
                 margin: 0,
                 errorCorrectionLevel: "M",
