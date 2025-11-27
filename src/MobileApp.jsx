@@ -54,7 +54,7 @@ export default function MobileApp() {
                 width: 600,
                 margin: 0,
                 errorCorrectionLevel: "M",
-                version: 5,
+                version: 6,
                 scale: 6
             });
 
