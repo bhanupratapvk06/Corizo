@@ -86,7 +86,7 @@ export default function MobileApp() {
     }, []);
 
     useEffect(() => {
-        document.title = `${recipientName.toUpperCase()} | Training Certificate Corizo | Corizo Edutech`;
+        document.title = `${recipientName} | Training Certificate Corizo | Corizo Edutech`;
     }, [recipientName]);
 
 
