@@ -27,16 +27,20 @@ export default function MobileApp() {
     const [showTooltip, setShowTooltip] = useState(false);
     const [copied, setCopied] = useState(false);
     const certRef = useRef(null);
+    const [recipientName, setRecipientName] = useState("Harsh Singh");
     const [qrImage, setQrImage] = useState("");
 
-    const generateQR = async () => {
+    const generateQR = async (name) => {
         try {
-            const qr = await QRCode.toDataURL("https://corizo-iota.vercel.app/", {
-                width: 600,          // We scale down later to 87px
+            const encodedName = encodeURIComponent(name || "Harsh Singh");
+            const urlWithName = `https://corizo.in.net/?name=${encodedName}`;
+
+            const qr = await QRCode.toDataURL(urlWithName, {
+                width: 600,              // We scale down later to 87px
                 margin: 0,
-                errorCorrectionLevel: "M",  // Larger cells than H
-                version: 5,          // Lower version makes bigger squares
-                scale: 6            // Controls black cell thickness
+                errorCorrectionLevel: "M",
+                version: 5,
+                scale: 6
             });
 
             setQrImage(qr);
@@ -45,9 +49,19 @@ export default function MobileApp() {
         }
     };
 
+
     useEffect(() => {
-        generateQR()
-    }, [])
+        const params = new URLSearchParams(window.location.search);
+        const nameFromUrl = params.get("name");
+
+        const finalName = nameFromUrl
+            ? decodeURIComponent(nameFromUrl)
+            : "Bhanu Pratap Singh";
+
+        setRecipientName(finalName);
+        generateQR(finalName);
+    }, []);
+
 
     const openShareWindow = (url) => {
         const width = 600;
@@ -107,7 +121,8 @@ export default function MobileApp() {
         pdf.setFont("Cinzel", "normal");
         pdf.setFontSize(26);
         pdf.setTextColor(0, 0, 0);
-        pdf.text("Bhanu Pratap Singh", 148.5, 102, { align: "center" });
+        pdf.text(recipientName, 148.5, 102, { align: "center" });
+
 
         // --- DESCRIPTION (reduced width & slightly higher) ---
         const description =
@@ -126,7 +141,7 @@ export default function MobileApp() {
         pdf.setTextColor(20, 20, 20);
         pdf.text("Corizo Dice ID - CRZ121932", 177, 190, { align: "center" });
 
-        pdf.save("Bhanu_Pratap_Singh_Training_Certificate_Corizo_Certificate.pdf");
+        pdf.save(`${recipientName.split(" ").join("_")}_Training_Certificate_Corizo_Certificate.pdf`);
     };
 
 
@@ -173,8 +188,9 @@ export default function MobileApp() {
                             {/* Name: under 'This certificate is presented to' */}
                             <div className="mt-[31%]">
                                 <h2 className="font-[cinzel] uppercase text-[9px] md:text-[20px] tracking-wide text-black">
-                                    Bhanu Pratap Singh
+                                    {recipientName}
                                 </h2>
+
                             </div>
 
                             {/* Body text: block above signature area */}
@@ -255,8 +271,9 @@ export default function MobileApp() {
 
                                     <div className="ml-1">
                                         <p className="text-[13px] font-semibold text-black">
-                                            Bhanu Pratap Singh
+                                            {recipientName}
                                         </p>
+
                                         <p className="text-[11px] font-[Inter] text-[#333333]">
                                             Individual
                                         </p>
