@@ -27,8 +27,8 @@ export default function MobileApp() {
     const [showTooltip, setShowTooltip] = useState(false);
     const [copied, setCopied] = useState(false);
     const certRef = useRef(null);
-    const [recipientName, setRecipientName] = useState("Akshay Verma");
-    const [recipientCode, setRecipientCode] = useState("");
+    const [recipientName, setRecipientName] = useState("Harsh Singh");
+    const [recipientCode, setRecipientCode] = useState("CRZ121932");
     const [qrImage, setQrImage] = useState("");
 
     const encodeData = (name, code) => {
@@ -40,7 +40,7 @@ export default function MobileApp() {
         try {
             return JSON.parse(atob(hash));
         } catch (err) {
-            return { name: "Akshay Verma", code: "CRZ121938" };
+            return { name: "Harsh Singh", code: "CRZ121932" };
         }
     };
 
@@ -77,13 +77,17 @@ export default function MobileApp() {
             generateQR(name, code); // regenerate QR with new hash
         } else {
             // default values
-            const defaultName = "Akshay Verma";
-            const defaultCode = "CRZ121938";
+            const defaultName = "Harsh Singh";
+            const defaultCode = "CRZ121932";
             setRecipientName(defaultName);
             setRecipientCode(defaultCode);
             generateQR(defaultName, defaultCode);
         }
     }, []);
+
+    useEffect(() => {
+        document.title = `${recipientName.toUpperCase()} | Training Certificate Corizo | Corizo Edutech`;
+    }, [recipientName]);
 
 
 
