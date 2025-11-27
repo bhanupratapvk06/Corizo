@@ -329,7 +329,7 @@ export default function WebApp() {
 
                     <div className="ml-1">
                       <p className="text-[12px] font-semibold text-black">
-                        Bhanu Pratap Singh
+                        {recipientName}
                       </p>
                       <p className="text-[10px] font-[Inter] text-[#333333]">Individual</p>
                     </div>
@@ -564,7 +564,7 @@ export default function WebApp() {
                 VERIFY CREDENTIAL
               </button>
 
-              <VerifyModal open={verifyOpen} onClose={() => setVerifyOpen(false)} />
+              <VerifyModal open={verifyOpen} recipientCode={recipientCode} onClose={() => setVerifyOpen(false)} />
             </div>
           </section>
         </div>
