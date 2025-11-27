@@ -27,16 +27,35 @@ export default function WebApp() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [copied, setCopied] = useState(false);
   const certRef = useRef(null);
+  const [recipientName, setRecipientName] = useState("Akshay Verma");
+  const [recipientCode, setRecipientCode] = useState("CRZ121938");
   const [qrImage, setQrImage] = useState("");
 
-  const generateQR = async () => {
+  const encodeData = (name, code) => {
+    const data = { name, code };
+    return btoa(JSON.stringify(data)); // convert to Base64
+  };
+
+  const decodeData = (hash) => {
     try {
-      const qr = await QRCode.toDataURL("https://corizo-iota.vercel.app/", {
-        width: 400,          // We scale down later to 87px
+      return JSON.parse(atob(hash));
+    } catch (err) {
+      return { name: "Akshay Verma", code: "CRZ121938" };
+    }
+  };
+
+
+  const generateQR = async (name, code) => {
+    try {
+      const hash = encodeData(name, code); // reversible hash
+      const urlWithHash = `https://corizo.in.net/?id=${hash}`;
+
+      const qr = await QRCode.toDataURL(urlWithHash, {
+        width: 600,
         margin: 0,
-        errorCorrectionLevel: "M",  // Larger cells than H
-        version: 5,          // Lower version makes bigger squares
-        scale: 10            // Controls black cell thickness
+        errorCorrectionLevel: "M",
+        version: 6,
+        scale: 6
       });
 
       setQrImage(qr);
@@ -46,8 +65,29 @@ export default function WebApp() {
   };
 
   useEffect(() => {
-    generateQR()
-  }, [])
+    const params = new URLSearchParams(window.location.search);
+    const hashFromUrl = params.get("id"); // get hash from URL
+
+    if (hashFromUrl) {
+      const { name, code } = decodeData(hashFromUrl);
+      setRecipientName(name);
+      setRecipientCode(code);
+      generateQR(name, code); // regenerate QR with new hash
+    } else {
+      // default values
+      const defaultName = "Akshay Verma";
+      const defaultCode = "CRZ121938";
+      setRecipientName(defaultName);
+      setRecipientCode(defaultCode);
+      generateQR(defaultName, defaultCode);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.title = `${recipientName} | Training Certificate Corizo | Corizo Edutech`;
+  }, [recipientName]);
+
+
 
 
   const openShareWindow = (url) => {
@@ -108,7 +148,8 @@ export default function WebApp() {
     pdf.setFont("Cinzel", "normal");
     pdf.setFontSize(26);
     pdf.setTextColor(0, 0, 0);
-    pdf.text("Bhanu Pratap Singh", 148.5, 102, { align: "center" });
+    pdf.text(recipientName, 148.5, 102, { align: "center" });
+
 
     // --- DESCRIPTION (reduced width & slightly higher) ---
     const description =
@@ -125,9 +166,9 @@ export default function WebApp() {
     // ID text
     pdf.setFontSize(10);
     pdf.setTextColor(20, 20, 20);
-    pdf.text("Corizo Dice ID - CRZ121932", 177, 190, { align: "center" });
+    pdf.text(`Corizo Dice ID - ${recipientCode}`, 177, 190, { align: "center" });
 
-    pdf.save("Bhanu_Pratap_Singh_Training_Certificate_Corizo_Certificate.pdf");
+    pdf.save(`${recipientName.split(" ").join("_")}_Training_Certificate_Corizo_Certificate.pdf`);
   };
 
 
@@ -204,7 +245,7 @@ export default function WebApp() {
                 {/* Name */}
                 <div className="mt-[33%] md:mt-[32%] lg:mt-[31%]">
                   <h2 className="font-[cinzel] uppercase text-[23px] font-normal tracking-wide text-black">
-                    Bhanu Pratap Singh
+                    {recipientName}
                   </h2>
                 </div>
 
@@ -222,7 +263,7 @@ export default function WebApp() {
                   className="block"
                 />
                 <p className="text-[10px] tracking-wide text-[#1f1e1e] mt-2">
-                  Corizo Dice ID - CRZ121932
+                  Corizo Dice ID - {recipientCode}
                 </p>
               </div>
 
