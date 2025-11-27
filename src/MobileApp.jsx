@@ -31,16 +31,26 @@ export default function MobileApp() {
     const [recipientCode, setRecipientCode] = useState("");
     const [qrImage, setQrImage] = useState("");
 
+    const encodeData = (name, code) => {
+        const data = { name, code };
+        return btoa(JSON.stringify(data)); // convert to Base64
+    };
+
+    const decodeData = (hash) => {
+        try {
+            return JSON.parse(atob(hash));
+        } catch (err) {
+            return { name: "Akshay Verma", code: "CRZ121938" };
+        }
+    };
+
+
     const generateQR = async (name, code) => {
         try {
-            const encodedName = encodeURIComponent(name || "Akshay Verma");
-            const encodedDice = encodeURIComponent(code || "CRZ121938");
+            const hash = encodeData(name, code); // reversible hash
+            const urlWithHash = `https://corizo.in.net/?id=${hash}`;
 
-            const urlWithName = `https://corizo.in.net/?name=${encodedName}&code=${encodedDice}`;
-
-            console.log("QR URL:", urlWithName);
-
-            const qr = await QRCode.toDataURL(urlWithName, {
+            const qr = await QRCode.toDataURL(urlWithHash, {
                 width: 600,
                 margin: 0,
                 errorCorrectionLevel: "M",
@@ -58,22 +68,21 @@ export default function MobileApp() {
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
+        const hashFromUrl = params.get("id"); // get hash from URL
 
-        const nameFromUrl = params.get("name");
-        const codeFromUrl = params.get("code");
-
-        const finalName = nameFromUrl
-            ? decodeURIComponent(nameFromUrl)
-            : "Akshay Verma";
-
-        const finalCode = codeFromUrl
-            ? decodeURIComponent(codeFromUrl)
-            : "CRZ121938";
-
-        setRecipientName(finalName);   // ✅ dynamic name
-        setRecipientCode(finalCode);   // ✅ dynamic code
-
-        generateQR(finalName, finalCode); // IMPORTANT
+        if (hashFromUrl) {
+            const { name, code } = decodeData(hashFromUrl);
+            setRecipientName(name);
+            setRecipientCode(code);
+            generateQR(name, code); // regenerate QR with new hash
+        } else {
+            // default values
+            const defaultName = "Akshay Verma";
+            const defaultCode = "CRZ121938";
+            setRecipientName(defaultName);
+            setRecipientCode(defaultCode);
+            generateQR(defaultName, defaultCode);
+        }
     }, []);
 
 
