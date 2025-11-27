@@ -580,7 +580,7 @@ export default function MobileApp() {
                                 VERIFY CREDENTIAL
                             </button>
 
-                            <VerifyModal open={showVerify} recipientCode={recipientCode} onClose={() => setShowVerify(false)} />
+                            <VerifyModal open={showVerify} recipientName={recipientName} onClose={() => setShowVerify(false)} />
 
                         </div>
                     </section>

@@ -3,7 +3,7 @@ import verifiedRound from "/verified_g.png";      // white circle with tick
 import verifiedBadge from "/verified_green.png";  // green badge with tick
 import loader from "/loader.gif";                 // loader gif
 
-export default function VerifyModal({ open, onClose,recipientCode}) {
+export default function VerifyModal({ open, onClose,recipientName}) {
   // phase 0..7 (see mapping below)
   const [phase, setPhase] = useState(0);
 
@@ -11,7 +11,7 @@ export default function VerifyModal({ open, onClose,recipientCode}) {
   const steps = [
     {
       label: "Recipient Name",
-      value: recipientCode,
+      value: recipientName,
     },
     {
       label: "Issuer Name",

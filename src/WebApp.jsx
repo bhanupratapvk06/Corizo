@@ -564,7 +564,7 @@ export default function WebApp() {
                 VERIFY CREDENTIAL
               </button>
 
-              <VerifyModal open={verifyOpen} recipientCode={recipientCode} onClose={() => setVerifyOpen(false)} />
+              <VerifyModal open={verifyOpen} recipientName={recipientName} onClose={() => setVerifyOpen(false)} />
             </div>
           </section>
         </div>
