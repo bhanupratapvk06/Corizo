@@ -525,7 +525,7 @@ export default function MobileApp() {
                                             <button
                                                 onClick={() => {
                                                     navigator.clipboard.writeText(
-                                                        "https://credentials.corizo.in/credential/bd2e88ee-b850-4386-b1dc-d23eda79654b"
+                                                        url
                                                     );
                                                     setCopied(true);
                                                     setTimeout(() => setCopied(false), 1500);
