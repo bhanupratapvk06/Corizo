@@ -19,9 +19,6 @@ import cinzelFont from "/cinzel.regular.ttf";
 import openSansFont from "/open-sans.regular.ttf";
 
 
-const CERTIFICATE_BODY =
-  "This is to certify that the above-mentioned candidate has successfully completed his/her training in Data Science From 05 September 2025 to 05 October 2025. During this course, he/she showed diligence, consistency, determination, active participation, and innovation throughout their training period.";
-
 export default function WebApp() {
   const [verifyOpen, setVerifyOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -30,6 +27,8 @@ export default function WebApp() {
   const [recipientName, setRecipientName] = useState("Akshay Verma");
   const [recipientCode, setRecipientCode] = useState("CRZ121938");
   const [qrImage, setQrImage] = useState("");
+  const CERTIFICATE_BODY =
+    `This is to certify that the above-mentioned candidate has successfully completed his/her training in ${recipientName == "Akshay Verma" ? "Artificial Intelligence" : "Data Science"} From 05 September 2025 to 05 October 2025. During this course, he/she showed diligence, consistency, determination, active participation, and innovation throughout their training period.`;
 
   const encodeData = (name, code) => {
     const data = { name, code };
