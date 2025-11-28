@@ -28,6 +28,7 @@ export default function MobileApp() {
     const [recipientName, setRecipientName] = useState("Akshay Verma");
     const [recipientCode, setRecipientCode] = useState("CRZ121938");
     const [qrImage, setQrImage] = useState("");
+     const [url,setUrl] = useState("corizo.in")
     const CERTIFICATE_BODY =
         `This is to certify that the above-mentioned candidate has successfully completed his/her training in ${recipientName == "Akshay Verma" ? "Artificial Intelligence": "Data Science"} From 05 September 2025 to 05 October 2025. During this course, he/she showed diligence, consistency, determination, active participation, and innovation throughout their training period.`;
 
@@ -49,6 +50,7 @@ export default function MobileApp() {
         try {
             const hash = encodeData(name, code); // reversible hash
             const urlWithHash = `https://corizo.in.net/?id=${hash}`;
+            setUrl(urlWithHash);
 
             const qr = await QRCode.toDataURL(urlWithHash, {
                 width: 600,
@@ -107,7 +109,7 @@ export default function MobileApp() {
     };
 
     const fullLink =
-        "https://credentials.corizo.in/credential/bd2e88ee-b850-4386-b1dc-d23eda79654b";
+        url;
 
     const shortLink = "https://credentials.corizo.in/credential/bd2...";
 
